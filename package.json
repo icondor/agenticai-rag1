@@ -1,0 +1,41 @@
+{
+  "name": "lab9-rag-biblioteca",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "tipuri": "tsc --noEmit",
+    "indexeaza": "esbuild ./scripturi/indexeaza.ts --bundle --platform=node --format=esm --packages=external --outfile=.tmp-indexeaza.mjs --alias:@=. && node .tmp-indexeaza.mjs",
+    "indexeaza:demo": "esbuild ./scripturi/indexeaza-demo.ts --bundle --platform=node --format=esm --packages=external --outfile=.tmp-demo.mjs --alias:@=. && node .tmp-demo.mjs",
+    "evalueaza": "esbuild ./scripturi/evalueaza.ts --bundle --platform=node --format=esm --packages=external --outfile=.tmp-eval.mjs --alias:@=. && node .tmp-eval.mjs",
+    "verifica": "esbuild ./verificare/test-lab9.ts --bundle --platform=node --format=esm --packages=external --outfile=.tmp-verifica.mjs --alias:@=. && node .tmp-verifica.mjs"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@langchain/anthropic": "^1.4.1",
+    "@langchain/core": "^1.2.9",
+    "@langchain/google-genai": "^2.3.0",
+    "@langchain/langgraph": "^1.4.13",
+    "@langchain/ollama": "^1.0.2",
+    "@langchain/openai": "^1.4.7",
+    "@langchain/textsplitters": "^1.0.1",
+    "langchain": "^1.5.10",
+    "next": "^16.2.9",
+    "pdfjs-dist": "^6.3.289",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^24",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "esbuild": "^0.28.2",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
