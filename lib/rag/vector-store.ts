@@ -4,7 +4,7 @@
 // PASUL 5 DIN PIPELINE — VECTOR STORE
 // ═══════════════════════════════════════════════════════════════════════
 //
-// 🎯 Demistificarea zilei: un vector store e un ARRAY de vectori plus o
+//  Demistificarea zilei: un vector store e un ARRAY de vectori plus o
 //    funcție de similaritate. Atât. Tot restul — indexare aproximativă,
 //    persistență, sharding — sunt optimizări care contează la milioane de
 //    documente, nu la câteva mii de chunk-uri de comentariu.
@@ -12,7 +12,7 @@
 //    Fișierul ăsta are ~50 de linii de logică reală. Le scriem noi ca să
 //    se vadă că nu e magie.
 //
-// ⚠️ DE CE NU FOLOSIM `MemoryVectorStore`:
+// DE CE NU FOLOSIM `MemoryVectorStore`:
 //    În v1, singura implementare în memorie trăiește în `@langchain/classic`
 //    — pachetul legacy pe care cursul îl predă ca «recunoaște și evită».
 //    `@langchain/core` are doar clasa abstractă.
@@ -109,12 +109,12 @@ export class VectorStoreSimplu extends VectorStore {
   /**
    * Căutarea propriu-zisă: compari întrebarea cu FIECARE document.
    *
-   * ⚠️ Da, e O(n). Pentru 5.000 de chunk-uri de 768 de dimensiuni înseamnă
+   * Da, e O(n). Pentru 5.000 de chunk-uri de 768 de dimensiuni înseamnă
    *    ~4 milioane de înmulțiri — câteva milisecunde. Pentru 5 milioane de
    *    chunk-uri ar fi inacceptabil, și de acolo încep indexările aproximative
    *    (HNSW, IVF) pe care le au pgvector, Qdrant, Pinecone.
    *
-   * 🎯 Filtrul se aplică ÎNAINTE de sortare — «pre-filtering». Diferența
+   *  Filtrul se aplică ÎNAINTE de sortare — «pre-filtering». Diferența
    *    față de a filtra rezultatele după căutare e importantă: dacă ceri
    *    k=5 și apoi filtrezi, poți rămâne cu 1 rezultat. Aici ceri 5 DINTRE
    *    cele care trec filtrul.

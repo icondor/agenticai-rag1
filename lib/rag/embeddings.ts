@@ -304,7 +304,7 @@ export class EmbeddingsCuCache implements EmbeddingsInterface {
     const gasit = this.cache.get(cheie);
     if (gasit) return gasit;
 
-    const vector = await this.baza.embedQuery(text);
+    const vector = await this.baza.embedQuery(text); // multilingual embedding
     this.cache.set(cheie, vector);
     await this.salveaza();
     return vector;

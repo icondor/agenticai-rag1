@@ -16,6 +16,7 @@ import {
   deducRol,
   extrageCarte,
   grupeazaInRanduri,
+  marcheazaColontitluri,
   REFERINTA,
   uneste,
   type Fragment as FragmentPdf,
@@ -137,6 +138,74 @@ if (!existsSync(PDF_TEST)) {
   verifica("T1b referință italic + text de corp → ancoră", roluri[1] === "ancora", roluri[1]);
   verifica("T1b rând întreg în italic → subsecțiune", roluri[2] === "subsectiune", roluri[2]);
   verifica("T1b ancoră singură pe rând → ancoră", roluri[3] === "ancora", roluri[3]);
+
+  const cuLatime = (str: string, x: number, width: number): FragmentPdf => ({
+    str,
+    fontName: "corp",
+    width,
+    transform: [10, 0, 0, 10, x, 500],
+  });
+  const [randSpatiat] = grupeazaInRanduri(
+    [
+      cuLatime("înfrânt", 20, 42),
+      cuLatime("în", 70, 12),
+      cuLatime("bătălia", 90, 40),
+      cuLatime("de", 136, 12),
+      cuLatime("la", 154, 10),
+      cuLatime("Gilău", 170, 28),
+    ],
+    157,
+  );
+  verifica(
+    "T1b spațiul lipit din PDF se reface după distanță",
+    randSpatiat.text === "înfrânt în bătălia de la Gilău",
+    randSpatiat.text,
+  );
+  const [randIntreg] = grupeazaInRanduri(
+    [cuLatime("bă", 20, 12), cuLatime("tălia", 32, 28)],
+    157,
+  );
+  verifica("T1b golul mic nu desparte un cuvânt", randIntreg.text === "bătălia", randIntreg.text);
+
+  const rolTitlu = (text: string, extra: Partial<Parameters<typeof deducRol>[0]> = {}) =>
+    deducRol({ text, x: 72, marime: 20, font: "titlu", ...extra }, o);
+  verifica(
+    "T1b fraza lungă, chiar mai mare, rămâne corp",
+    rolTitlu("a României moderne, pentru că, la acea dată, se creaseră, în linii mari,", {
+      font: "corp",
+    }) === "corp",
+  );
+  verifica(
+    "T1b linia scurtă din majuscule e capitol",
+    rolTitlu("ORGANIZAREA OPOZIȚIEI") === "titlu_capitol",
+  );
+  verifica(
+    "T1b titlul scurt în casă mixtă e capitol",
+    rolTitlu("Făurirea României Mari") === "titlu_capitol",
+  );
+  verifica(
+    "T1b o literă mare, chiar centrată, nu e parte",
+    rolTitlu("E", { x: 200, font: "titlu" }) === "corp",
+  );
+
+  const repetat = (pagina: number, text: string) => ({
+    text,
+    rol: "subsectiune" as const,
+    pagina,
+    x: 72,
+    marime: 12,
+    font: "antet",
+  });
+  const cuAntet = [
+    ...[10, 11, 12, 13].map((p) => repetat(p, `Istoria medievală ${p}`)),
+    repetat(10, "Făurirea României Mari"),
+  ];
+  marcheazaColontitluri(cuAntet);
+  verifica(
+    "T1b colontitlul repetat se aruncă",
+    cuAntet.slice(0, 4).every((r) => r.rol === "antet_subsol"),
+  );
+  verifica("T1b titlul care apare o dată rămâne", cuAntet[4].rol === "subsectiune");
 }
 
 // ── T2b: referințele biblice în română ─────────────────────────────────
